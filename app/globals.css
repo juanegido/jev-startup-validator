@@ -1,62 +1,100 @@
 @import "tailwindcss";
 
+/* Light is the default. Dark redefines tokens only, in both the
+   system-preference and explicit data-theme states. */
 :root {
-  --background: #05050a;
-  --foreground: #f4f4f5;
+  color-scheme: light;
+  --paper: #f1f2f4;
+  --panel: #ffffff;
+  --ink: #12141a;
+  --ink-2: #5c6270;
+  --ink-3: #8b909c;
+  --rule: #dcdfe5;
+  --rule-strong: #b9bec8;
+  --accent: #1c5cab;
+  --accent-ink: #1c5cab;
+  --track: #cde2fb;
+  --critical: #d03b3b;
+  --warning: #9a6700;
+  --focus: #1c5cab;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --paper: #121316;
+    --panel: #1a1b1f;
+    --ink: #f2f3f5;
+    --ink-2: #b4b9c4;
+    --ink-3: #7c828e;
+    --rule: #2a2c33;
+    --rule-strong: #3d4049;
+    --accent: #3987e5;
+    --accent-ink: #6ea8f0;
+    --track: #184f95;
+    --critical: #e25c5c;
+    --warning: #e0a82e;
+    --focus: #6ea8f0;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --paper: #121316;
+  --panel: #1a1b1f;
+  --ink: #f2f3f5;
+  --ink-2: #b4b9c4;
+  --ink-3: #7c828e;
+  --rule: #2a2c33;
+  --rule-strong: #3d4049;
+  --accent: #3987e5;
+  --accent-ink: #6ea8f0;
+  --track: #184f95;
+  --critical: #e25c5c;
+  --warning: #e0a82e;
+  --focus: #6ea8f0;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --animate-float: float 14s ease-in-out infinite;
-  --animate-float-slow: float 22s ease-in-out infinite reverse;
-  --animate-fade-up: fade-up 0.6s ease-out both;
-  --animate-pulse-dot: pulse-dot 1.2s ease-in-out infinite;
-}
-
-@keyframes float {
-  0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-  50% { transform: translate3d(4%, -6%, 0) scale(1.08); }
-}
-
-@keyframes fade-up {
-  from { opacity: 0; transform: translateY(12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse-dot {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.7); }
+  --color-paper: var(--paper);
+  --color-panel: var(--panel);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-track: var(--track);
+  --color-critical: var(--critical);
+  --color-warning: var(--warning);
+  --font-sans: var(--font-plex-sans);
+  --font-mono: var(--font-plex-mono);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), system-ui, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-plex-sans), "Helvetica Neue", Arial, sans-serif;
+  font-feature-settings: "ss01";
 }
 
-.grid-overlay {
-  background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(ellipse at 50% 0%, black 30%, transparent 75%);
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
 }
 
-.glass {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.06) inset,
-    0 30px 80px -30px rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(20px);
+/* Hairline gridlines at 0 / 25 / 50 / 75 / 100 behind every bar row. */
+.gridlines {
+  background-image: linear-gradient(to right, var(--rule) 1px, transparent 1px);
+  background-size: calc(25% - 0.25px) 100%;
+  background-repeat: repeat-x;
+  border-right: 1px solid var(--rule);
 }
 
-.text-gradient {
-  background: linear-gradient(90deg, #f4f4f5 0%, #a5b4fc 45%, #67e8f9 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
 }

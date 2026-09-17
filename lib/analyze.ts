@@ -1,6 +1,12 @@
 import { TypeSafeClient, noul, score } from "@typesafe-ai/sdk";
 import { DIMENSIONS, MAX_LEVEL, type DimensionId } from "./rubric";
 
+export interface LevelProbability {
+  level: number;
+  description: string;
+  probability: number;
+}
+
 export interface DimensionResult {
   id: DimensionId;
   label: string;
@@ -10,6 +16,8 @@ export interface DimensionResult {
   score: number;
   confidence: number;
   weight: number;
+  /** Full distribution over rubric levels, in level order. */
+  levels: LevelProbability[];
 }
 
 export interface AnalysisResult {
@@ -54,6 +62,14 @@ export async function analyzeIdea(idea: string): Promise<AnalysisResult> {
     if (answer.type !== "score") {
       throw new Error(`Unexpected answer type for ${dimension.id}`);
     }
+    const probabilities = answer.probabilities as Record<string, number>;
+    const levels: LevelProbability[] = dimension.criteria.map(
+      (description, level) => ({
+        level,
+        description,
+        probability: probabilities[String(level)] ?? 0,
+      }),
+    );
     return {
       id: dimension.id,
       label: dimension.label,
@@ -61,6 +77,7 @@ export async function analyzeIdea(idea: string): Promise<AnalysisResult> {
       value: answer.score / MAX_LEVEL,
       confidence: answer.confidence,
       weight: dimension.weight,
+      levels,
     };
   });
 
